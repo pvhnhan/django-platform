@@ -1,0 +1,28 @@
+include:
+  - template: Auto-DevOps.gitlab-ci.yml
+
+.auto-deploy:
+  image: registry.gitlab.com/gitlab-org/cluster-integration/auto-deploy-image:v2.1.0
+  variables:
+    AUTO_DEVOPS_FORCE_DEPLOY_V2: 1
+
+variables:
+  DOCKERFILE_PATH: .devops/build/Dockerfile
+  TEST_DISABLED: "true"
+  CODE_QUALITY_DISABLED: "true"
+  LICENSE_MANAGEMENT_DISABLED: "true"
+  PERFORMANCE_DISABLED: "true"
+  LOAD_PERFORMANCE_DISABLED: "true"
+  SAST_DISABLED: "true"
+  SECRET_DETECTION_DISABLED: "true"
+  DEPENDENCY_SCANNING_DISABLED: "true"
+  CONTAINER_SCANNING_DISABLED: "true"
+  DAST_DISABLED: "true"
+  STAGING_ENABLED: "false"  
+  REVIEW_DISABLED: "true"
+  CODE_INTELLIGENCE_DISABLED: "true"
+  POSTGRES_ENABLED: "false"
+
+build:
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "master"'

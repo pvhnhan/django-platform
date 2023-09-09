@@ -1,0 +1,32 @@
+version: '3.9'
+services:
+  db:
+    image: postgres
+    container_name: django-db
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: DjangoDB
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  web:
+    container_name: django-web
+    build:
+      context: .
+      dockerfile: .devops/build/Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:      
+      - web-data:/var/lib/django      
+      - .:/source
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    restart: always
+    environment:
+      DATABASE_URL: postgresql://myuser:mypassword@db:5432/mydb
+volumes:
+  web-data:
+  db-data:      
